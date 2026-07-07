@@ -1,0 +1,116 @@
+:root {
+    --uan:          #1a5fa8;
+    --uan-dark:     #104080;
+    --uan-darker:   #0a2d5c;
+    --uan-light:    #e6f0fb;
+    --uan-xlight:   #f0f6fd;
+    --orange:       #eb7417;
+    --orange-light: #fef3e8;
+    --text-main:    #0d2340;
+    --text-muted:   #5a7090;
+    --border:       #c5d8f0;
+}
+
+body {
+    background: var(--uan-xlight);
+    color: var(--text-main);
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+}
+
+/* nav */
+.navbar                   { background: var(--uan) !important; min-height: 58px; }
+.navbar-brand             { color: #fff !important; font-size: 15px; font-weight: 500; display: flex; align-items: center; gap: 10px; }
+.navbar-brand img         { height: 38px; filter: brightness(0) invert(1); }
+.nav-link                 { color: rgba(255,255,255,.7) !important; font-size: 13px; }
+.nav-link:hover,
+.nav-link.active          { color: #fff !important; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--orange); }
+
+/* hero */
+.hero                     { background: var(--uan-darker); padding: 48px 24px 40px; text-align: center; }
+.hero.hero-sm             { padding: 28px 24px; }
+.hero h1                  { font-size: 24px; font-weight: 500; color: #fff; margin-bottom: 8px; }
+.hero p                   { font-size: 14px; color: rgba(255,255,255,.55); margin-bottom: 24px; }
+
+/* buscador */
+.search-box               { max-width: 580px; margin: 0 auto; display: flex; border-radius: 8px; overflow: hidden; border: 2px solid var(--orange); }
+.search-box input         { flex: 1; border: none; outline: none; padding: 11px 16px; font-size: 14px; background: #fff; color: var(--text-main); }
+.search-box button        { background: var(--orange); border: none; padding: 0 22px; font-size: 13px; font-weight: 500; color: #fff; cursor: pointer; transition: background .15s; }
+.search-box button:hover  { background: #d0640f; }
+
+/* tags hero */
+.hero-tags                { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-top: 16px; }
+.hero-tag                 { background: rgba(255,255,255,.1); color: rgba(255,255,255,.75); border: 1px solid rgba(255,255,255,.2); border-radius: 20px; font-size: 12px; padding: 4px 12px; cursor: pointer; transition: all .15s; text-decoration: none; }
+.hero-tag:hover           { background: rgba(235,116,23,.2); border-color: var(--orange); color: #fff; }
+
+/* sidebar filtros */
+.filter-card              { background: #fff; border: 1px solid var(--border); border-radius: 10px; padding: 14px; margin-bottom: 12px; }
+.filter-title             { font-size: 11px; font-weight: 600; color: var(--uan); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 10px; border-bottom: 1px solid var(--uan-light); padding-bottom: 6px; }
+.filter-option            { display: flex; align-items: center; gap: 8px; padding: 4px 0; cursor: pointer; }
+.filter-option input      { accent-color: var(--uan); width: 14px; height: 14px; cursor: pointer; }
+.filter-option label      { font-size: 13px; color: var(--text-main); flex: 1; cursor: pointer; }
+.filter-count             { font-size: 11px; color: var(--text-muted); background: var(--uan-xlight); padding: 1px 7px; border-radius: 10px; }
+
+/* tarjetas resultado */
+.rev-card                 { background: #fff; border: 1px solid var(--border); border-left: 3px solid transparent; border-radius: 10px; padding: 16px; margin-bottom: 10px; transition: border-color .15s; cursor: pointer; }
+.rev-card:hover           { border-left-color: var(--orange); border-color: var(--uan-light); }
+.rev-title                { font-size: 15px; font-weight: 500; color: var(--uan-dark); text-decoration: none; line-height: 1.4; }
+.rev-title:hover          { color: var(--orange); }
+.rev-stars                { color: var(--orange); font-size: 13px; letter-spacing: 1px; }
+.rev-star-empty           { color: #d0d8e0; }
+.rev-desc                 { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+.rev-url                  { font-size: 12px; color: var(--uan); text-decoration: none; }
+.rev-url:hover            { text-decoration: underline; color: var(--orange); }
+.rec-badge                { font-size: 12px; color: var(--text-muted); }
+.rec-dot                  { width: 7px; height: 7px; border-radius: 50%; background: var(--orange); display: inline-block; margin-right: 4px; }
+.card-divider             { border-top: 1px solid var(--uan-light); margin-top: 10px; padding-top: 10px; }
+
+/* pills */
+.pill                     { font-size: 11px; padding: 2px 9px; border-radius: 20px; border: 1px solid; white-space: nowrap; }
+.pill-area                { background: var(--uan-light); color: var(--uan-dark); border-color: var(--border); }
+.pill-pais                { background: var(--uan-xlight); color: var(--uan); border-color: var(--border); }
+.pill-gratis              { background: #e8f7ee; color: #1a6e40; border-color: #a8d8bb; }
+.pill-pago                { background: #fff0f0; color: #a03030; border-color: #f0b8b8; }
+.pill-hibrida             { background: var(--orange-light); color: #a05000; border-color: #f0c090; }
+.cuartil-txt              { font-size: 12px; font-weight: 600; color: var(--uan); }
+
+/* tags de indexaciones */
+.index-tag                { font-size: 11px; background: var(--uan-xlight); color: var(--uan); border: 1px solid var(--border); border-radius: 4px; padding: 1px 7px; }
+
+/* results bar */
+.results-bar              { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; flex-wrap: wrap; gap: 8px; }
+.results-count            { font-size: 13px; color: var(--text-muted); }
+.sort-select              { font-size: 13px; padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border); background: #fff; color: var(--text-main); cursor: pointer; }
+.sort-select:focus        { outline: none; border-color: var(--uan); }
+
+/* paginacion */
+.page-btn                 { border: 1px solid var(--border); background: #fff; color: var(--text-main); padding: 6px 13px; border-radius: 6px; font-size: 13px; cursor: pointer; transition: all .15s; text-decoration: none; }
+.page-btn:hover           { border-color: var(--uan); color: var(--uan); }
+.page-btn.active          { background: var(--uan); border-color: var(--uan); color: #fff; font-weight: 500; }
+
+/* detalle */
+.detalle-card             { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 28px; }
+.detalle-titulo           { font-size: 22px; font-weight: 500; color: var(--uan-dark); margin-bottom: 12px; line-height: 1.3; }
+.detalle-grid             { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+.btn-volver               { font-size: 13px; color: var(--uan); text-decoration: none; }
+.btn-volver:hover         { color: var(--orange); }
+.btn-sitio                { display: inline-block; background: var(--uan); color: #fff; padding: 10px 20px; border-radius: 8px; font-size: 13px; text-decoration: none; transition: background .15s; }
+.btn-sitio:hover          { background: var(--uan-dark); color: #fff; }
+
+/* titulos de seccion */
+.section-title            { font-size: 18px; font-weight: 500; color: var(--uan-dark); }
+.section-subtitle         { font-size: 15px; font-weight: 500; color: var(--uan); }
+
+/* colaboradores / footer */
+.colabs-section           { background: var(--uan-darker); padding: 36px 24px; border-top: 3px solid var(--orange); }
+.colabs-title             { text-align: center; font-size: 13px; font-weight: 500; color: rgba(255,255,255,.6); margin-bottom: 28px; text-transform: uppercase; letter-spacing: .5px; }
+.colabs-grid              { display: flex; align-items: center; justify-content: center; gap: 24px; flex-wrap: wrap; max-width: 900px; margin: 0 auto; }
+.colab-item               { display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: .7; transition: opacity .2s; }
+.colab-item:hover         { opacity: 1; }
+.colab-logo-wrap          { width: 64px; height: 64px; border-radius: 10px; background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15); display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 6px; }
+.colab-logo-wrap.colab-principal { width: 80px; height: 80px; border-color: rgba(235,116,23,.35); }
+.colab-logo-wrap img      { width: 100%; height: 100%; object-fit: contain; filter: brightness(0) invert(1); }
+.colab-name               { font-size: 11px; color: rgba(255,255,255,.4); text-align: center; max-width: 90px; line-height: 1.3; }
+.colab-name.colab-name-principal { color: rgba(255,255,255,.65); max-width: 110px; }
+.colab-divider            { width: 1px; height: 56px; background: rgba(255,255,255,.1); }
+.colabs-footer            { text-align: center; font-size: 11px; color: rgba(255,255,255,.2); margin-top: 24px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,.06); }
