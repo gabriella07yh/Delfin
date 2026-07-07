@@ -1,2 +1,14 @@
-# Entorno local
+# Entornos locales
 frontend/.env
+backend/.env
+
+# Node / NestJS
+**/node_modules/
+**/dist/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+
+# Sistema
+.DS_Store
+Thumbs.db
