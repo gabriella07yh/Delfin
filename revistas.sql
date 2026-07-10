@@ -72,6 +72,7 @@ ALTER TABLE `revistas`
 --
 -- AUTO_INCREMENT de la tabla `revistas`
 --
+
 ALTER TABLE `revistas`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
