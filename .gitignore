@@ -12,3 +12,8 @@ backend/.env
 # Sistema
 .DS_Store
 Thumbs.db
+
+
+# Base de datos
+CreacionBasedeDatos.sql
+ScriptInserciónDatos.sql
