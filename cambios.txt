@@ -1,0 +1,305 @@
+-------SCRIPT PARA AJUSTAR DB ANTES DEL SCRIPT DE INSERCCION
+
+-- ============================================================
+-- AJUSTE DE ESTRUCTURA PARA DATOS REVISTAS
+-- ============================================================
+
+-- 1. Desactivar temporalmente restricciones
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- 2. Modificar tabla revistas - eliminar la columna id_tema
+ALTER TABLE `revistas` DROP FOREIGN KEY `revistas_ibfk_1`;
+ALTER TABLE `revistas` DROP COLUMN `id_tema`;
+
+-- 3. Crear tabla revista_tema si no existe (ya existe, pero verificamos)
+CREATE TABLE IF NOT EXISTS `revista_tema` (
+  `id_revista` int(11) NOT NULL,
+  `id_tema` int(11) NOT NULL,
+  PRIMARY KEY (`id_revista`,`id_tema`),
+  KEY `id_tema` (`id_tema`),
+  CONSTRAINT `revista_tema_ibfk_1` FOREIGN KEY (`id_revista`) REFERENCES `revistas` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `revista_tema_ibfk_2` FOREIGN KEY (`id_tema`) REFERENCES `temas` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 4. Reactivar restricciones
+SET FOREIGN_KEY_CHECKS = 1;
+
+-------METER DATOS AHORA SI
+
+-- ============================================================
+-- SCRIPT DE INSERCIÓN DE DATOS CORREGIDO
+-- ============================================================
+
+USE u583236171_rev;
+
+-- ------------------------------------------------------------
+-- 1. Limpiar datos existentes (opcional - CUIDADO)
+-- ------------------------------------------------------------
+-- DELETE FROM revista_indexacion;
+-- DELETE FROM revista_tema;
+-- DELETE FROM revistas;
+-- DELETE FROM temas;
+-- DELETE FROM indexaciones;
+
+-- ------------------------------------------------------------
+-- 2. Insertar Temas (27 temas únicos)
+-- ------------------------------------------------------------
+INSERT IGNORE INTO temas (tema) VALUES
+    ('Agricultural and Biological Sciences'),
+    ('Arts and Humanities'),
+    ('Biochemistry, Genetics and Molecular Biology'),
+    ('Business, Management and Accounting'),
+    ('Chemical Engineering'),
+    ('Chemistry'),
+    ('Computer Science'),
+    ('Decision Sciences'),
+    ('Dentistry'),
+    ('Earth and Planetary Sciences'),
+    ('Economics, Econometrics and Finance'),
+    ('Energy'),
+    ('Engineering'),
+    ('Environmental Science'),
+    ('Health Professions'),
+    ('Immunology and Microbiology'),
+    ('Materials Science'),
+    ('Mathematics'),
+    ('Medicine'),
+    ('Multidisciplinary'),
+    ('Neuroscience'),
+    ('Nursing'),
+    ('Pharmacology, Toxicology and Pharmaceutics'),
+    ('Physics and Astronomy'),
+    ('Psychology'),
+    ('Social Sciences'),
+    ('Veterinary');
+
+-- ------------------------------------------------------------
+-- 3. Insertar Indexaciones (32 indexaciones únicas)
+-- ------------------------------------------------------------
+INSERT IGNORE INTO indexaciones (indexacion) VALUES
+    ('CINAHL'),
+    ('Catálogos académicos'),
+    ('Catálogos institucionales'),
+    ('Catálogos regionales'),
+    ('Catálogos universitarios'),
+    ('Cochrane'),
+    ('Conahcyt'),
+    ('DOAJ'),
+    ('Dialnet'),
+    ('Directorios académicos'),
+    ('EMBASE'),
+    ('ESCI'),
+    ('Google Scholar'),
+    ('IMBIOMED'),
+    ('Index Medicus'),
+    ('Latindex'),
+    ('Lilacs'),
+    ('MEDLINE'),
+    ('MIAR'),
+    ('Medigraphic'),
+    ('Portal institucional universitario'),
+    ('PsycINFO'),
+    ('PubMed'),
+    ('PubMed Central'),
+    ('PubMed/MEDLINE'),
+    ('Redalyc'),
+    ('SCImago'),
+    ('SciELO'),
+    ('SciELO México'),
+    ('ScienceDirect'),
+    ('Scopus'),
+    ('Web of Science');
+
+-- ------------------------------------------------------------
+-- 4. Insertar Revistas (sin id_tema)
+-- ------------------------------------------------------------
+INSERT IGNORE INTO revistas (titulo_revista, cuartil, idioma, costo, open_access, arbitrada, descripcion, enlace) VALUES
+    ('Salud Publica de México', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Una de las revistas de salud pública más importantes de México y Latinoamérica. Fundada en 1959, pública investigación sobre problemas de salud de la población con enfoque interdisciplinario. Arbitraje doble ciego.', 'https://saludpublica.mx'),
+    ('Boletín Medico del Hospital Infantil de México', 'Q3', 'Español', 0.00, TRUE, TRUE, 'publicación oficial del Hospital Infantil de México Federico Gómez. Una de las revistas médicas más antiguas del país. Cubre investigación clínica y básica en pediatría nacional.', 'https://www.bmhim.com'),
+    ('Cirugía y Cirujanos', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Órgano oficial de la Academia Mexicana de Cirugía, asesor del Gobierno Federal en materia de salud. Fundada en 1933. Publica en formato bilingüe.', 'https://cirugiaycirujanos.com'),
+    ('Gaceta Médica de México', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Una de las publicaciones médicas más antiguas de México, fundada en 1864. Cubre investigación clínica, biomédica y de salud pública. Arbitraje doble ciego.', 'https://www.anmm.org.mx/gaceta'),
+    ('Salud Mental', 'Q3', 'Español', 0.00, TRUE, TRUE, 'publicación oficial del Instituto Nacional de Psiquiatría. Es la única revista mexicana de psiquiatría indexada en Web of Science y Scopus.', 'https://www.revistasaludmental.mx'),
+    ('Archivos de Cardiología de Mexico', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Órgano oficial de la Sociedad Mexicana de Cardiología. Cubre todas las áreas de la cardiología clínica, intervencionista y básica.', 'https://www.archivoscardiologia.com'),
+    ('Revista de la Facultad de Medicina UNAM', 'SIN ASIGNAR', 'Español', 0.00, TRUE, TRUE, 'publicación universitaria de la Facultad de Medicina de la UNAM. Enfocada en la difusión del conocimiento médico con perspectiva educativa.', 'https://www.revistas.unam.mx/index.php/rfm'),
+    ('Acta Pediátrica de Mexico', 'SIN ASIGNAR', 'Español', 0.00, TRUE, TRUE, 'Publicación oficial del Instituto Nacional de Pediatria de Mexico. Buena puerta de entrada para publicar en el área médica nacional.', 'https://www.actapediatrica.org.mx'),
+    ('Revista Mexicana de Medicina Familiar', 'SIN ASIGNAR', 'Español', 0.00, TRUE, TRUE, 'Revista especializada en medicina de primer nivel de atención. En proceso de Indexación en SciELO, lo que ampliará su visibilidad.', 'https://www.medigraphic.com/rmmf'),
+    ('Revista Mexicana de Neurociencia', 'SIN ASIGNAR', 'Español', 0.00, TRUE, TRUE, 'Órgano oficial de la Academia Mexicana de Neurología. Publica investigación en neurociencias básicas y clínicas.', 'https://revmexneuroci.com'),
+    ('Revista Mexicana de Urología', 'SIN ASIGNAR', 'Español', 0.00, TRUE, TRUE, 'Órgano oficial de la Sociedad Mexicana de Urología. Cubre urología clínica, oncológica e intervencionista.', 'https://www.revistamexicanadeurologia.com'),
+    ('Revista de Medicina e Investigación UAEM', 'SIN ASIGNAR', 'Español', 0.00, TRUE, TRUE, 'Revista universitaria de la UAEM distribuida por Elsevier. Sin costo alguno. Ideal como primera publicación para estudiantes y docentes que inician en investigación.', 'https://www.elsevier.es/es-revista-revista-medicina-e-investigacion-353'),
+    ('Revista Panamericana de Salud Publica (OPS/PAHO)', 'Q2', 'Otro', 0.00, TRUE, TRUE, 'La publicación científica más importante de la OPS. Referente en salud pública latinoamericana. Cuádruple revisión de idiomas. Muy alta visibilidad internacional.', 'https://journal.paho.org/es'),
+    ('Cadernos de Saude Publica (Brasil)', 'Q1', 'Otro', 0.00, TRUE, TRUE, 'Una de las revistas de salud pública más citadas de Latinoamérica. Q1 en Scopus. Publicada por FIOCRUZ. Arbitraje doble ciego.', 'https://www.scielo.br/csp'),
+    ('Ciencia & Saude Coletiva (Brasil)', 'Q1', 'Otro', 0.00, TRUE, TRUE, 'Q1 en Scopus sin APC. Muy activa en temas de inequidad en salud, políticas públicas y determinantes sociales. Publica números temáticos de gran difusión regional.', 'https://www.cienciaesaudecoletiva.com.br'),
+    ('Revista de Saude Publica (Brasil)', 'Q2', 'Otro', 0.00, TRUE, TRUE, 'Una de las revistas más antiguas de Brasil en salud pública. Fundada en 1967. Cubre epidemiología, salud ambiental, ocupacional y política sanitaria.', 'https://www.scielo.br/rsp'),
+    ('Biomedica (Colombia)', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Publicación oficial del Instituto Nacional de Salud de Colombia. Enfasis en enfermedades tropicales, virología y salud pública latinoamericana.', 'https://revistabiomedica.org'),
+    ('Revista de Ciencias de la Salud (Universidad del Rosario)', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Revista universitaria con buena Indexación para su tipo. Sin APC. Cubre todas las áreas de las ciencias de la salud con enfoque multidisciplinario.', 'https://revistas.urosario.edu.co/index.php/revsalud'),
+    ('Investigación y Educacion en Enfermeria', 'Q3', 'Otro', 0.00, TRUE, TRUE, 'Una de las revistas de enfermería mejor indexadas de Latinoamérica. Acepta artículos en tres idiomas.', 'https://revistas.udea.edu.co/index.php/iee'),
+    ('Ciencia & Enfermeria', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Primera revista de enfermería chilena en ingresar a Web of Science y Scopus. Referente regional para la disciplina.', 'https://www.scielo.cl/scielo.php?pid=0717-9553&script=sci_serial'),
+    ('Epidemiologia e Servicios de Saude (Brasil)', 'Q2', 'Otro', 0.00, TRUE, TRUE, 'Destaca por traducir todos los artículos al inglés de forma gratuita. Sin costo alguno para autores ni lectores.', 'https://www.saude.gov.br/ess'),
+    ('Acta Medica Colombiana', 'SIN ASIGNAR', 'Español', 0.00, TRUE, TRUE, 'Revista colombiana sin APC. Indexada en Latindex y DOAJ. Buena opción para investigadores hispanohablantes que inician.', 'https://www.actamedicacolombiana.com'),
+    ('Revista Colombiana de Obstetricia y Ginecologia', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Revista de referencia en gineco-obstetricia latinoamericana. Sin costo. Acepta guias de practica clínica y consensos.', 'https://revista.fecolsog.org'),
+    ('Medicina (Buenos Aires)', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Una de las revistas médicas más antiguas de Argentina, fundada en 1939. Indexada en PubMed y Scopus.', 'https://www.medicinabuenosaires.com'),
+    ('Revista Medica de Chile', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Fundada en 1872, es una de las revistas médicas más antiguas de Latinoamérica. Indexada en PubMed, Scopus y WoS.', 'https://www.revistamedicadechile.cl'),
+    ('The Lancet', 'Q1', 'Inglés', 0.00, FALSE, TRUE, 'Revista médica de referencia internacional con los más altos estandares de revisión. Fundada en 1823.', 'https://www.thelancet.com'),
+    ('BMJ (British Medical Journal)', 'Q1', 'Inglés', 4500.00, TRUE, TRUE, 'Segunda revista médica general más importante del mundo. Fundada en 1840. Alta visibilidad global.', 'https://www.bmj.com'),
+    ('JAMA (Journal of the American Medical Association)', 'Q1', 'Inglés', 3000.00, FALSE, TRUE, 'Una de las tres grandes revistas médicas mundiales. Fundada en 1883. Requiere registro de ensayos clínicos previo a publicación.', 'https://jamanetwork.com/journals/jama'),
+    ('New England Journal of Medicine (NEJM)', 'Q1', 'Inglés', 6000.00, FALSE, TRUE, 'La revista con mayor factor de impacto en medicina. Fundada en 1812. Representa el tope de la publicación médica internacional.', 'https://www.nejm.org'),
+    ('PLOS Medicine', 'Q1', 'Inglés', 3500.00, TRUE, TRUE, '100% open access. Publicada por PLOS, editorial sin fines de lucro. Evalua la solidez metodologica del artículo, no su potencial impacto.', 'https://journals.plos.org/plosmedicine'),
+    ('PLOS ONE', 'Q2', 'Inglés', 1895.00, TRUE, TRUE, 'La revista con mayor número de artículos publicados en el mundo. Evalua validez científica, no potencial impacto. Waivers disponibles para Mexico.', 'https://journals.plos.org/plosone'),
+    ('BMC Public Health', 'Q1', 'Inglés', 2790.00, TRUE, TRUE, 'Parte de la familia BioMed Central de Springer Nature. Q1 en Scopus. Activa en determinantes sociales de salud y epidemiología comunitaria.', 'https://bmcpublichealth.biomedcentral.com'),
+    ('BMC Medicine', 'Q1', 'Inglés', 3290.00, TRUE, TRUE, 'Revista flagship de BioMed Central. Alto factor de impacto. Enfocada en investigación translacional de relevancia clínica directa.', 'https://bmcmedicine.biomedcentral.com'),
+    ('Journal of Global Health', 'Q1', 'Inglés', 0.00, TRUE, TRUE, 'Revista Q1 sin APC, caso poco común. Excelente para investigación sobre desigualdades globales en salud y salud materno-infantil.', 'https://jogh.org'),
+    ('Global Health: Science and Practice', 'Q2', 'Inglés', 0.00, TRUE, TRUE, 'Ideal para investigación operacional y de implementación en salud global. Sin APC. Acepta lecciones aprendidas, formato que facilita publicar experiencias de campo.', 'https://www.ghspjournal.org'),
+    ('Bulletin of the World Health Organization (OMS)', 'Q1', 'Inglés', 0.00, TRUE, TRUE, 'Publicación oficial de la OMS. Q1 sin APC. Prioriza investigación de paises en desarrollo. Resumenes en seis idiomas.', 'https://www.who.int/bulletin'),
+    ('Frontiers in Public Health', 'Q2', 'Inglés', 1300.00, TRUE, TRUE, 'Modelo de revisión abierta donde los revisores son identificados. Proceso editorial rápido. Popular entre investigadores de Latinoamérica.', 'https://www.frontiersin.org/journals/public-health'),
+    ('Frontiers in Medicine', 'Q2', 'Inglés', 2950.00, TRUE, TRUE, 'Q2 con tasa de aceptacion relativamente alta. Evalua validez científica, no impacto esperado. Cubre un amplio espectro de medicina clínica.', 'https://www.frontiersin.org/journals/medicine'),
+    ('International Journal of Environmental Research and Public Health (IJERPH)', 'Q2', 'Inglés', 3600.00, TRUE, TRUE, 'Una de las revistas MDPI más activas. Proceso editorial ágil. Cubre salud ambiental, ocupacional y comunitaria.', 'https://www.mdpi.com/journal/ijerph'),
+    ('Nutrients', 'Q1', 'Inglés', 3600.00, TRUE, TRUE, 'Revista Q1 especializada en nutrición. Alta demanda para estudios dietéticos, nutraceuticos y epidemiología nutricional.', 'https://www.mdpi.com/journal/nutrients'),
+    ('International Journal of Clinical and Health Psychology', 'Q1', 'Otro', 0.00, TRUE, TRUE, 'Caso excepcional: Q1 en Scopus y WoS sin ninguna APC. Acepta en español. Ideal para investigación en psicología de la salud y salud mental de autores hispanohablantes.', 'https://www.ijchp.net'),
+    ('Journal of Epidemiology and Community Health', 'Q1', 'Inglés', 3750.00, FALSE, TRUE, 'Revista BMJ especializada en epidemiología social. Cubre determinantes sociales, desigualdades en salud y salud urbana.', 'https://jech.bmj.com'),
+    ('American Journal of Public Health (AJPH)', 'Q1', 'Inglés', 3100.00, FALSE, TRUE, 'Referente en salud pública desde 1911. Publicación oficial de la APHA. Muy influyente en política de salud.', 'https://ajph.aphapublications.org'),
+    ('Social Science & Medicine', 'Q1', 'Inglés', 3450.00, FALSE, TRUE, 'Referente en ciencias sociales aplicadas a la salud. Acepta metodología cualitativa, cuantitativa y mixta. Muy citada en salud pública.', 'https://www.journals.elsevier.com/social-science-and-medicine'),
+    ('Health Policy and Planning', 'Q1', 'Inglés', 2800.00, TRUE, TRUE, 'Especializada en investigación de sistemas y políticas sanitarias. Publicada por Oxford. Relevante para estudios sobre política de salud latinoamericana.', 'https://academic.oup.com/heapol'),
+    ('Tropical Medicine & International Health', 'Q2', 'Inglés', 4400.00, FALSE, TRUE, 'Ideal para enfermedades tropicales como dengue, malaria y parasitosis. Relevante para investigación en regiones tropicales de Mexico.', 'https://onlinelibrary.wiley.com/journal/13653156'),
+    ('Journal of Infectious Diseases', 'Q1', 'Inglés', 3500.00, FALSE, TRUE, 'Publicación oficial de la IDSA. Referente en virología, bacteriología e inmunología infecciosa.', 'https://academic.oup.com/jid'),
+    ('Revista Española de Salud Publica', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Gratuita e indexada en PubMed. Buena opción para autores hispanohablantes sin costo de publicación.', 'https://scielo.isciii.es/scielo.php?pid=1135-5727&script=sci_serial'),
+    ('Gaceta Sanitaria', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Revista Q2 en español sin APC, indexada en PubMed y WoS. Muy recomendada para investigadores de Latinoamérica.', 'https://www.gacetasanitaria.org'),
+    ('Atencion Primaria', 'Q3', 'Español', 0.00, FALSE, TRUE, 'Referente en medicina familiar hispanohablante. Sin APC e indexada en PubMed. Acepta investigación en primer nivel de atención con relevancia latinoamericana.', 'https://www.elsevier.es/es-revista-atencion-primaria-27'),
+    ('Journal of Health, Population and Nutrition', 'Q2', 'Inglés', 0.00, TRUE, TRUE, 'Q2 sin APC. Parte de BioMed Central/Springer Nature. Enfocada en nutrición comunitaria y salud en paises en desarrollo.', 'https://jhpn.biomedcentral.com'),
+    ('Scientific Reports', 'Q1', 'Inglés', 2500.00, TRUE, TRUE, 'Revista multidisciplinaria de acceso abierto de Nature Portfolio, centrada en ciencias naturales.', 'https://www.nature.com/srep/'),
+    ('Heliyon', 'Q2', 'Inglés', 2160.00, TRUE, TRUE, 'Revista multidisciplinaria de acceso abierto de Elsevier.', 'https://www.heliyon.com/'),
+    ('Frontiers in Science', 'Q2', 'Inglés', 3250.00, TRUE, TRUE, 'Revista de Frontiers enfocada en investigación científica.', 'https://www.frontiersin.org/journals/science'),
+    ('Journal of Multidisciplinary Studies', 'SIN ASIGNAR', 'Inglés', 30.00, FALSE, FALSE, 'Revista multidisciplinaria enfocada en diversas áreas del conocimiento.', 'https://www.jmds.org/'),
+    ('BMJ Open', 'Q1', 'Inglés', 2900.00, TRUE, TRUE, 'Revista de acceso abierto con revisión por pares y cobertura biomédica amplia.', 'https://bmjopen.bmj.com/'),
+    ('Nature Communications', 'Q1', 'Inglés', 6290.00, TRUE, TRUE, 'Revista de acceso abierto de alto impacto de Nature.', 'https://www.nature.com/ncomms'),
+    ('Science Advances', 'Q1', 'Inglés', 5450.00, TRUE, TRUE, 'Revista multidisciplinaria abierta de AAAS.', 'https://www.science.org/doi/journal/sadv'),
+    ('PLOS Biology', 'Q1', 'Inglés', 5500.00, TRUE, TRUE, 'Revista de alto impacto en ciencias biológicas.', 'https://journals.plos.org/plosbiology'),
+    ('eLife', 'SIN ASIGNAR', 'Inglés', 2500.00, TRUE, TRUE, 'Revista científica de biología y medicina.', 'https://elifesciences.org/'),
+    ('Revista Colombiana de Ciencias Multidisciplinarias', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Revista académica de la Universidad Nacional de Colombia.', 'https://revistas.unal.edu.co/index.php/multidisciplinarias'),
+    ('Ciencia y Multidisciplinariedad', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Revista universitaria enfocada en temas multidisciplinarios.', 'https://revistas.udantioquia.edu.co/ciencia-multidisciplinariedad'),
+    ('Revista Multidisciplinar Latinoamericana', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Revista latinoamericana de enfoque multidisciplinario.', 'https://revistas.univalle.edu.co/multidisciplinar'),
+    ('Investigaciones Multidisciplinarias', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Revista institucional orientada a investigación multidisciplinaria.', 'https://revistas.ubjt.edu.co/investigaciones-multidisciplinarias'),
+    ('PLOS Computational Biology', 'Q1', 'Inglés', 4000.00, TRUE, TRUE, 'Revista dedicada a biología computacional y modelado biológico.', 'https://journals.plos.org/ploscompbiol'),
+    ('PLOS Genetics', 'Q1', 'Inglés', 5000.00, TRUE, TRUE, 'Revista centrada en genética y genómica.', 'https://journals.plos.org/plosgenetics'),
+    ('PLOS Neglected Tropical Diseases', 'Q1', 'Inglés', 3700.00, TRUE, TRUE, 'Revista enfocada en salud global y enfermedades tropicales.', 'https://journals.plos.org/plosntds'),
+    ('Frontiers in Genetics', 'Q1', 'Inglés', 3900.00, TRUE, TRUE, 'Revista de Frontiers especializada en genética.', 'https://www.frontiersin.org/journals/genetics'),
+    ('Frontiers in Immunology', 'Q1', 'Inglés', 4200.00, TRUE, TRUE, 'Revista de inmunología de acceso abierto.', 'https://www.frontiersin.org/journals/immunology'),
+    ('Frontiers in Microbiology', 'Q1', 'Inglés', 3900.00, TRUE, TRUE, 'Revista especializada en microbiología.', 'https://www.frontiersin.org/journals/microbiology'),
+    ('Frontiers in Cell and Developmental Biology', 'Q1', 'Inglés', 4200.00, TRUE, TRUE, 'Revista de biología celular y del desarrollo.', 'https://www.frontiersin.org/journals/cell-dev-biol'),
+    ('Frontiers in Molecular Neuroscience', 'Q1', 'Inglés', 4200.00, TRUE, TRUE, 'Revista especializada en neurociencia molecular.', 'https://www.frontiersin.org/journals/molecular-neuroscience'),
+    ('Frontiers in Physiology', 'Q1', 'Inglés', 4000.00, TRUE, TRUE, 'Revista enfocada en fisiología.', 'https://www.frontiersin.org/journals/physiology'),
+    ('Frontiers in Plant Science', 'Q1', 'Inglés', 4000.00, TRUE, TRUE, 'Revista de ciencias vegetales.', 'https://www.frontiersin.org/journals/plant-science'),
+    ('Frontiers in Psychology', 'Q1', 'Inglés', 3700.00, TRUE, TRUE, 'Revista de psicología de acceso abierto.', 'https://www.frontiersin.org/journals/psychology'),
+    ('Frontiers in Environmental Science', 'Q1', 'Inglés', 3900.00, TRUE, TRUE, 'Revista centrada en ciencias ambientales.', 'https://www.frontiersin.org/journals/environmental-science'),
+    ('Revista Mexicana de Investigación Educativa (RMIE)', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Revista líder en México sobre hallazgos empíricos del sistema educativo.', 'https://ojs.rmie.mx/index.php/rmie'),
+    ('Revista Electrónica de Investigación Educativa (REDIE)', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Publica artículos de investigación teórica y empírica vinculada a la práctica educativa.', 'https://redie.uabc.mx/redie'),
+    ('Perfiles Educativos', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Una de las revistas más antiguas y prestigiosas de México en ciencias de la educación.', 'https://perfileseducativos.unam.mx/'),
+    ('Computers & Education', 'Q1', 'Inglés', 3150.00, FALSE, TRUE, 'Revista de máximo impacto global en la integración de tecnologías digitales en la educación.', 'https://www.journals.elsevier.com/computers-and-education'),
+    ('Educational Research Review', 'Q1', 'Inglés', 2950.00, FALSE, TRUE, 'Especializada exclusivamente en revisiones críticas de literatura educativa mundial.', 'https://www.journals.elsevier.com/educational-research-review'),
+    ('Revista Iberoamericana de Educación Superior (RIES)', 'Q3', 'Otro', 0.00, TRUE, TRUE, 'Enfocada en el análisis de las políticas, gobierno y financiamiento de la educación superior.', 'https://www.ries.universia.unam.mx/'),
+    ('Harvard Educational Review', 'Q1', 'Inglés', 2500.00, FALSE, TRUE, 'Revista de gran prestigio histórico que modela el debate sobre políticas públicas educativas.', 'https://www.harvardeducationalreview.org/'),
+    ('Revista Complutense de Educación', 'Q2', 'Español', 0.00, FALSE, TRUE, 'Espacio de difusión para la investigación empírica en el ámbito escolar y pedagógico.', 'https://revistas.ucm.es/index.php/RCED'),
+    ('Learning and Instruction', 'Q1', 'Inglés', 3200.00, FALSE, TRUE, 'Revista oficial de la European Association for Research on Learning and Instruction.', 'https://www.journals.elsevier.com/learning-and-instruction'),
+    ('Educatio Siglo XXI', 'Q3', 'Español', 0.00, FALSE, TRUE, 'Publicación abierta con monográficos dedicados a temáticas actuales de las aulas teóricas.', 'https://revistas.um.es/educatio'),
+    ('American Educational Research Journal', 'Q1', 'Inglés', 3400.00, FALSE, TRUE, 'La revista insignia de la American Educational Research Association.', 'https://journals.sagepub.com/home/aer'),
+    ('Revista de Educación', 'Q2', 'Español', 0.00, FALSE, TRUE, 'Revista oficial del estado español para la difusión de investigación en políticas públicas.', 'http://www.educacionyfp.gob.es/revista-de-educacion'),
+    ('Review of Educational Research', 'Q1', 'Inglés', 3500.00, FALSE, TRUE, 'Frecuentemente rankeada como la #1 en impacto mundial dentro del área educativa.', 'https://journals.sagepub.com/home/rer'),
+    ('Innovación Educativa', 'Q4', 'Español', 0.00, FALSE, TRUE, 'Dedicada a las nuevas metodologías de enseñanza, tecnologías y gestión institucional.', 'http://www.innovacion.ipn.mx/'),
+    ('Educational Technology Research and Development', 'Q1', 'Inglés', 2850.00, FALSE, TRUE, 'Única revista centrada completamente en la investigación teórica del diseño instruccional.', 'https://www.springer.com/journal/11423'),
+    ('Computers in the Schools', 'Q2', 'Inglés', 2600.00, FALSE, TRUE, 'Especializada en el uso práctico de herramientas digitales y computacionales en aulas de educación básica.', 'https://www.tandfonline.com/toc/wcis20/current'),
+    ('Journal of Educational Psychology', 'Q1', 'Inglés', 3000.00, FALSE, TRUE, 'Líder global en procesos cognitivos, motivación y desarrollo psicológico escolar.', 'https://www.apa.org/pubs/journals/edu'),
+    ('Apertura', 'Q4', 'Español', 0.00, FALSE, TRUE, 'Especializada en ambientes virtuales de aprendizaje y educación no convencional.', 'http://www.udgvirtual.udg.mx/apertura/'),
+    ('British Journal of Educational Technology (BJET)', 'Q1', 'Inglés', 3100.00, FALSE, TRUE, 'Revista líder en Europa para la aplicación de TICs en sistemas educativos formales.', 'https://bera-journals.onlinelibrary.wiley.com/journal/14678535'),
+    ('Revista Latinoamericana de Estudios Educativos', 'SIN ASIGNAR', 'Español', 0.00, TRUE, TRUE, 'Histórica revista dedicada a la equidad social, educación popular y exclusión.', 'https://rlee.ibero.mx/'),
+    ('Teaching and Teacher Education', 'Q1', 'Inglés', 2700.00, TRUE, TRUE, 'Enfocada en el bienestar, desarrollo profesional y políticas de empleo para profesores.', 'https://www.journals.elsevier.com/teaching-and-teacher-education'),
+    ('Revista Iberoamericana de Educación (RIE)', 'Q3', 'Otro', 0.00, TRUE, TRUE, 'Fomenta el intercambio de reformas estructurales educativas en toda Latinoamérica.', 'https://rieoei.org/'),
+    ('Revista Iberoamericana de Tecnología en Educación y Educación en Tecnología (TE&ET)', 'Q3', 'Otro', 0.00, TRUE, TRUE, 'Enfocada en la integración de TICs en sistemas educativos y desarrollo de software para la enseñanza en la región iberoamericana.', 'https://teyet-revista.info.unlp.edu.ar/'),
+    ('Sinéctica', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Promueve una visión crítica y transformadora de la práctica de los educadores.', 'https://sinectica.iteso.mx/'),
+    ('International Journal of Educational Technology in Higher Ed.', 'Q1', 'Inglés', 1950.00, TRUE, TRUE, 'Analiza el impacto disruptivo de la tecnología en el entorno universitario.', 'https://educationaltechnologyjournal.springeropen.com/'),
+    ('Revista Interuniversitaria de Formación del Profesorado (RIFOP)', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Centrada en la formación inicial, continua, desarrollo profesional y competencias del cuerpo docente.', 'https://recyt.fecyt.es/index.php/RIFOP'),
+    ('RIDE Revista Iberoamericana para la Investigación Educativa', 'SIN ASIGNAR', 'Español', 0.00, TRUE, TRUE, 'Plataforma ágil enfocada a la publicación de docentes y alumnos de posgrado latinoamericanos.', 'https://www.ride.org.mx/index.php/RIDE'),
+    ('Sociology of Education', 'Q1', 'Inglés', 3100.00, FALSE, TRUE, 'Analiza cómo interactúan las estructuras sociales con el rendimiento escolar.', 'https://journals.sagepub.com/home/soe'),
+    ('Revista de Investigación Educativa (RIE-UM)', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Revista de referencia institucional para métodos cuantitativos y cualitativos aplicados.', 'https://revistas.um.es/rie'),
+    ('Journal of Research in Science Teaching', 'Q1', 'Inglés', 2900.00, FALSE, TRUE, 'La revista oficial de la National Association for Research in Science Teaching (NARST).', 'https://onlinelibrary.wiley.com/journal/10982736'),
+    ('Alteridad', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Foco interdisciplinar en filosofías de la educación y realidades sociales excluidas.', 'https://alteridad.ups.edu.ec/'),
+    ('Early Childhood Research Quarterly', 'Q1', 'Inglés', 2600.00, FALSE, TRUE, 'Líder global en estudios empíricos sobre la infancia temprana y estimulación de 0 a 8 años.', 'https://www.journals.elsevier.com/early-childhood-research-quarterly'),
+    ('Revista Latinoamericana de Investigación en Matemática Educativa', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Revista especializada de nicho para la enseñanza de álgebra, cálculo y geometría.', 'http://www.relime.org/'),
+    ('Higher Education', 'Q1', 'Inglés', 2800.00, FALSE, TRUE, 'Analiza sistemas universitarios públicos y privados desde un enfoque global comparativo.', 'https://www.springer.com/journal/10734'),
+    ('Magis, Revista Internacional de Investigación en Educación', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Destaca por sus altos estándares de diseño editorial y solidez en metodologías mixtas.', 'https://revistas.javeriana.edu.co/index.php/MAGIS'),
+    ('Curriculum Inquiry', 'Q2', 'Inglés', 2400.00, FALSE, TRUE, 'Dedicada al estudio profundo del diseño curricular, planes de estudio e ideologías en el aula.', 'https://www.tandfonline.com/toc/rcui20/current'),
+    ('Revista Educación', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Una de las revistas centroamericanas más estables y amigables con investigadores jóvenes.', 'https://revistas.ucr.ac.cr/index.php/educacion'),
+    ('Journal of Learning Analytics', 'Q2', 'Inglés', 0.00, TRUE, TRUE, 'Enfocada en el uso de Big Data y minería de datos aplicada al seguimiento de alumnos.', 'https://learning-analytics.info/'),
+    ('Ensaio: Avaliação e Políticas Públicas em Educação', 'Q2', 'Otro', 0.00, TRUE, TRUE, 'Especializada en métricas de evaluación del aprendizaje institucional y estatal.', 'https://www.scielo.br/j/ensaio/'),
+    ('Qualitative Research in Education', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Especializada en enfoques cualitativos puros: entrevistas, grupos focales e historias de vida.', 'https://hipatiapress.com/hpjournals/index.php/qre'),
+    ('Revista Digital de Investigación en Docencia Universitaria', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Centrada en los retos didácticos y competencias del docente en el siglo XXI.', 'https://revistas.uned.ac.cr/index.php/innovaciones'),
+    ('Educational Assessment', 'Q2', 'Inglés', 2550.00, FALSE, TRUE, 'Dedicada a las teorías psicométricas y desarrollo de exámenes estandarizados.', 'https://www.tandfonline.com/toc/HEDA20/current'),
+    ('CPU-e, Revista de Investigación Educativa', 'SIN ASIGNAR', 'Español', 0.00, TRUE, TRUE, 'Espacio académico flexible que publica estados del arte y avances de tesis de posgrado.', 'https://cpue.uv.mx/index.php/cpue'),
+    ('Journal of Digital Learning in Teacher Education', 'Q2', 'Inglés', 2450.00, FALSE, TRUE, 'Investiga modelos y estrategias para preparar a los futuros profesores en competencias y entornos digitales.', 'https://www.tandfonline.com/toc/ujdl20/current'),
+    ('Revista de Educación a Distancia (RED)', 'Q1', 'Español', 0.00, TRUE, TRUE, 'Altamente citada en ambientes de aprendizaje híbrido, gamificación y MOOCs.', 'https://revistas.um.es/red'),
+    ('International Journal of STEM Education', 'Q1', 'Inglés', 2190.00, TRUE, TRUE, 'Líder mundial en la investigación de la enseñanza integrada de Ciencias, Tecnología, Ingeniería y Matemáticas.', 'https://stemeducationjournal.springeropen.com/'),
+    ('Studies in Higher Education', 'Q1', 'Inglés', 3300.00, FALSE, TRUE, 'Analiza de manera profunda la identidad del estudiante universitario y cambios institucionales.', 'https://www.tandfonline.com/toc/cshe20/current'),
+    ('Revista Electrónica Educare', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Revista continua de acceso abierto absoluto, muy bien valorada por su amabilidad en dictamen.', 'https://www.revistas.una.ac.cr/index.php/educare'),
+    ('Revista Latinoamericana de Tecnología Educativa (RELATEC)', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Promueve la investigación y difusión abierta sobre software educativo, e-learning y alfabetización digital.', 'https://relatec.unex.es/'),
+    ('Innovaciones Educativas', 'SIN ASIGNAR', 'Español', 0.00, TRUE, TRUE, 'Orientada a la difusión de experiencias directas en el aula para la mejora continua.', 'https://revistas.uned.ac.cr/index.php/innovaciones'),
+    ('IEEE Transactions on Pattern Analysis and Machine Intelligence', 'Q1', 'Inglés', 2300.00, FALSE, TRUE, 'Revista líder en IA, visión por computadora y análisis de patrones', 'https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=3468  '),
+    ('IEEE Transactions on Neural Networks', 'Q1', 'Inglés', 2300.00, FALSE, TRUE, 'Publica investigación en redes neuronales y aprendizaje profundo', 'https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=23  '),
+    ('IEEE Transactions on Software Engineering', 'Q1', 'Inglés', 2300.00, FALSE, TRUE, 'Enfoque en ingeniería de software, métodos y calidad', 'https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=32  '),
+    ('IEEE Transactions on Image Processing', 'Q1', 'Inglés', 2300.00, FALSE, TRUE, 'Cubre procesamiento, análisis y mejora de imágenes', 'https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=83 '),
+    ('IEEE Transactions on Mobile Computing', 'Q1', 'Inglés', 2300.00, FALSE, TRUE, 'Movilidad, redes inalámbricas y computación móvil', 'https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=79 '),
+    ('IEEE Transactions on Information Theory', 'Q1', 'Inglés', 2300.00, FALSE, TRUE, 'Fundamentos teóricos de la información y codificación', 'https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=18 '),
+    ('IEEE Wireless Communications', 'Q1', 'Inglés', 2300.00, FALSE, TRUE, 'Tendencias y aplicaciones en comunicaciones inálambricas', 'https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=79'),
+    ('IEEE Transactions on Fuzzy Systems', 'Q1', 'Inglés', 2300.00, FALSE, TRUE, 'Sistemas difusos, control e inteligencia computacional', 'https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=91'),
+    ('IEEE Transactions on Industrial Electronics', 'Q1', 'Inglés', 2300.00, FALSE, TRUE, 'Electrónica industrial, automatización y control', 'https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=41'),
+    ('IEEE Transactions on Automatic Control', 'Q1', 'Inglés', 2300.00, FALSE, TRUE, 'Teoría y aplicaciones de control automático', 'https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=9'),
+    ('ACM Transactions on Software Engineering and Methodology', 'Q1', 'Inglés', 1800.00, TRUE, TRUE, 'Ingeniería en software, procesos y metodologías', 'http://tosem.acm.org/ '),
+    ('ACM Transactions on Graphics', 'Q1', 'Inglés', 1800.00, TRUE, TRUE, 'Gráficos por computadora, visualización y animación', 'http://www.acm.org/tog/ '),
+    ('ACM Computing Surveys', 'Q1', 'Inglés', 1800.00, TRUE, TRUE, 'Artículos de revisión exhaustivos en informática', 'https://dl.acm.org/journal/csur '),
+    ('Journal of Machine Learning Research (JMLR)', 'Q1', 'Inglés', 0.00, TRUE, TRUE, 'Revista abierta especializada en aprendizaje automático', 'https://www.jmlr.org'),
+    ('Artificial Intelligence', 'Q1', 'Inglés', 4050.00, FALSE, TRUE, 'Investigación teórica y aplicada en IA', 'https://www.sciencedirect.com/journal/artificial-intelligence '),
+    ('Machine Learning', 'Q1', 'Inglés', 2990.00, FALSE, TRUE, 'Algoritmos y teoría de aprendizaje automático', 'https://www.springer.com/journal/10997'),
+    ('Computational Linguistics', 'Q1', 'Inglés', 0.00, TRUE, TRUE, 'Procesamiento del lenguaje natural y lingüística computacional', 'https://cljournal.org'),
+    ('International Journal of Computer Vision', 'Q1', 'Inglés', 2050.00, FALSE, TRUE, 'Visión por computadora y reconocimiento de patrones', 'https://www.editorialmanager.com/visi/default.aspx '),
+    ('IEEE Pervasive Computing', 'Q1', 'Inglés', 2995.00, FALSE, TRUE, 'Computación ubicua, sensores y sistemas pervasivos', 'https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=6352'),
+    ('IEEE Network', 'Q1', 'Inglés', 2800.00, FALSE, TRUE, 'Tecnologías, arquitecturas y gestión de redes', 'https://ieeexplore.ieee.org/xpl/RecentIssue.jsp?punumber=64'),
+    ('Revista Cubana de Ciencias Informáticas', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Publica investigaciones en informática, software y ciencias de la computación', 'http://scielo.sld.cu/revistas/rcci/eaboutj.htm'),
+    ('Revista Peruana de Computación y Sistemas', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Difunde trabajos en computación, sistemas e información aplicada', 'https://revistasinvestigacion.unmsm.edu.pe/index.php/rpcsis/index'),
+    ('Ingenius. Revista de Ciencia y Tecnología', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Revista multidisciplinaria con énfasis en ingeniería y tecnología', 'https://ingenius.ups.edu.ec/ingenius/ '),
+    ('Conciencia Tecnológica', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Publica artículos sobre tecnología e ingeniería aplicada', 'https://www.latindex.org/latindex/ficha/4619 '),
+    ('Revista de Tecnología', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Revista académica de ingeniería y tecnología con enfoque regional', 'https://www.tecnologia-ciencia-educacion.com/index.php/TCE '),
+    ('TecnoLógicas', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Revista orientada a ingeniería, innovación y desarrollo tecnológico', 'https://revistas.itm.edu.co/index.php/tecnologicas/index'),
+    ('Ingeniería y Competitividad', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Incluye investigaciones tecnológicas e ingenieriles con aplicación práctica', 'https://revistaingenieria.univalle.edu.co '),
+    ('Revista Electrónica Gestión de las Personas y Tecnología', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Trata gestión, innovación y tecnología en entornos organizacionales', 'https://doaj.org/toc/0718-5693 '),
+    ('Revista Científica Ingeniería y Desarrollo', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Publica resultados de investigación en ingeniería y desarrollo tecnológico', 'https://rcientificas.uninorte.edu.co/index.php/ingenieria '),
+    ('Revista Iberoamericana de Tecnologías del Aprendizaje', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Aborda tecnología educativa y uso de TIC en aprendizaje', 'https://vaep-rita.org/es/home-espanol/'),
+    ('Pixel-Bit, Revista de Medios y Educación', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Centrada en medios, educación y tecnología educativa', 'https://recyt.fecyt.es/index.php/pixel '),
+    ('EDUTEC', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Publica investigación sobre tecnología educativa y e-learning', 'https://www.edutec.es/revista/index.php/edutec-e '),
+    ('RUSC', 'Q3', 'Español', 0.00, TRUE, TRUE, 'Tecnología educativa y sociedad del conocimiento', 'https://rusc.uoc.edu'),
+    ('Revista Latinoamericana de Tecnología Educativa', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Foca tecnología educativa y herramientas digitales', 'https://relatec.unex.es'),
+    ('Revista de Innovación Educativa y Tecnología', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Difunde innovación didáctica con soporte tecnológico', 'https://rpmie.org/revista-innovacion-educativa-tecnologia'),
+    ('Revista de Tecnologías de la Información', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Trata sistemas, TIC y soluciones informáticas', 'https://www.latindex.org/latindex/ficha/25800 '),
+    ('Revista de Informática Educativa', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Investigación sobre informática aplicada a la educación', 'https://rieoei.org/rie/secciones'),
+    ('Revista de Tecnología y Sociedad', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Analiza impactos sociales y tecnológicos de la innovación', 'https://www.tecnologia-ciencia-educacion.com/index.php/TCE/inicio'),
+    ('Revista de Sistemas y Tecnología', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Publica estudios sobre sistemas de información y tecnología', 'https://revistas.unsa.edu.pe/index.php/rsit'),
+    ('Revista de Ingeniería e Innovación Tecnológica', 'Q4', 'Español', 0.00, TRUE, TRUE, 'Investigación aplicada en ingeniería e innovación', 'https://revistas.uss.edu.pe/index.php/ING '),
+    ('Revista Tecnología en Marcha', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Publica investigación en ingeniería, tecnología y áreas aplicadas', 'https://revistas.tec.ac.cr/index.php/tec_marcha'),
+    ('ReCIBE, Revista electrónica de Computación, Informática, Biomédica y Electrónica', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Difunde estudios y desarrollos tecnológicos de corte científico-investigativo', 'https://recibe.cucei.udg.mx '),
+    ('Ciencia, Tecnología y Salud', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Revista académica arbitrada sobre áreas científicas, tecnológicas y de salud', 'https://revistas.usac.edu.gt/index.php/cytes '),
+    ('Revista Iberoamericana de Tecnología en Educación y Educación en Tecnología', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Publica resultados en tecnología educativa y educación en tecnología', 'https://teyet-revista.info.unlp.edu.ar'),
+    ('EDUTEC, Revista Electrónica de Tecnología Educativa', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Centrada en investigación sobre tecnología educativa e innovación docente', 'https://www.edutec.es/revista/index.php/edutec-e '),
+    ('ICONO 14', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Revista científica de comunicación, sociedad digital y tecnología.', 'https://icono14.net '),
+    ('Publicaciones en Ciencias y Tecnología', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Publica estudios científicos y tecnológicos de carácter multidisciplinario', 'https://revistas.uclave.org/index.php/pcyt '),
+    ('Revista de Tecnología y Ciencia', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Enfocada en resultados de investigación aplicada en tecnología', 'https://rtyc.utn.edu.ar/index.php/rtyc '),
+    ('Revista Digital de Tecnologías Aplicadas', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Difunde investigaciones sobre aplicaciones tecnológicas y sistemas digitales', 'https://rtyc.utn.edu.ar/index.php/rtyc '),
+    ('Revista Iberoamericana de Sistemas, Cibernética e Informática', 'Q2', 'Español', 0.00, TRUE, TRUE, 'Aborda sistemas informática, control y tecnologías afines', 'https://www.iiisci.org/journal/risci ');
+
+-- ------------------------------------------------------------
+-- NOTA: Las relaciones revista-tema y revista-indexacion 
+-- se deben insertar usando los IDs generados.
+-- 
+-- Dado que los scripts originales son muy extensos y los IDs 
+-- pueden variar, te recomiendo ejecutar el script de relaciones 
+-- por separado, o usar una herramienta como phpMyAdmin para 
+-- exportar los datos.
+-- 
+-- ¿Quieres que te ayude a generar los scripts de las relaciones 
+-- (revista_tema y revista_indexacion) también?
+-- ------------------------------------------------------------
