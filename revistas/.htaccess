@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteBase /
+
+# redirigir raiz a menu.php
+RewriteRule ^$ menu.php [L]
