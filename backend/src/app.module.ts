@@ -6,9 +6,12 @@ import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { RevistasModule } from './revistas/revistas.module';
+import { SugerenciasModule } from './sugerencias/sugerencias.module';
 import { User } from './users/entities/user.entity';
 import { Revista } from './revistas/entities/revista.entity';
 import { Indexacion } from './revistas/entities/indexacion.entity';
+import { Tema } from './revistas/entities/tema.entity';
+import { Sugerencia } from './sugerencias/entities/sugerencia.entity';
 import { UsersService } from './users/users.service';
 import { RevistasService } from './revistas/revistas.service';
 
@@ -27,13 +30,14 @@ import { RevistasService } from './revistas/revistas.service';
         username: configService.get<string>('DB_USERNAME') || 'root',
         password: configService.get<string>('DB_PASSWORD') || '',
         database: configService.get<string>('DB_DATABASE') || 'revistas',
-        entities: [User, Revista, Indexacion],
+        entities: [User, Revista, Indexacion, Tema, Sugerencia],
         synchronize: true, // Auto-creates database schema based on entities
       }),
     }),
     UsersModule,
     AuthModule,
     RevistasModule,
+    SugerenciasModule,
   ],
   controllers: [AppController],
   providers: [AppService],
