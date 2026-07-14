@@ -31,7 +31,7 @@ import { RevistasService } from './revistas/revistas.service';
         password: configService.get<string>('DB_PASSWORD') || '',
         database: configService.get<string>('DB_DATABASE') || 'revistas',
         entities: [User, Revista, Indexacion, Tema, Sugerencia],
-        synchronize: true, // Auto-creates database schema based on entities
+        synchronize: configService.get<string>('DB_SYNCHRONIZE') === 'true',
       }),
     }),
     UsersModule,
